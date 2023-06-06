@@ -28,7 +28,7 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
 
     public HotelBookingSystem() {
         setTitle("Hotel Booking System");
-        setSize(400, 300);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel();
@@ -73,13 +73,16 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
         add(mainPanel);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == bookButton) 
-        {
+        public void actionPerformed(ActionEvent e) {
+            
+          if (e.getSource() == bookButton) {
             if (BookRoom.checkAvailability()) 
             {
-                BookRoom bookRoom = new BookRoom();
-                JOptionPane.showMessageDialog(this, "Room booked successfully.");
+                SwingUtilities.invokeLater(() -> {
+                    BookRoom bookRoom = new BookRoom();
+                    bookRoom.setVisible(true);
+                    }
+                );
             } 
             else 
             {
