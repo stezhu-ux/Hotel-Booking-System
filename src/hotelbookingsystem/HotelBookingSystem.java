@@ -33,11 +33,11 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(9, 1));
-
+        
         bookButton = new JButton("Book a Room");
         bookButton.addActionListener(this);
         mainPanel.add(bookButton);
-
+        
         checkoutButton = new JButton("Check-out a Room");
         checkoutButton.addActionListener(this);
         mainPanel.add(checkoutButton);
@@ -86,19 +86,18 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
             } 
             else 
             {
-                JOptionPane.showMessageDialog(this, "Sorry, there are no unoccupied rooms available.");
+                JOptionPane.showMessageDialog(this, "Sorry, there are no rooms available.");
             }
         }
         
-        else if (e.getSource() == checkoutButton) 
-        {
-            if (CheckOut.checkAvailability()) 
-            {
-                CheckOut.checkOutGuest();
-                JOptionPane.showMessageDialog(this, "Room checked out successfully.");
-            } 
-            else 
-            {
+        else if (e.getSource() == checkoutButton) {
+            if (CheckOut.checkAvailability()) {
+                SwingUtilities.invokeLater(() -> {
+                    CheckOut checkOut = new CheckOut();
+                    checkOut.setVisible(true);
+                    }
+                );
+            } else {
                 JOptionPane.showMessageDialog(this, "Sorry, all rooms are unoccupied.");
             }
         }
