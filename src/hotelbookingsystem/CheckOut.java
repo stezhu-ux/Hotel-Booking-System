@@ -1,9 +1,16 @@
 package hotelbookingsystem;
 
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class CheckOut {
-    
+public class CheckOut extends JFrame implements ActionListener {
+
+    private JComboBox<Integer> roomComboBox;
+    private JButton checkOutButton;
+
+     // Check if any room is occupied
     public static boolean checkAvailability() {
     for (HotelRoom room : HotelBookingSystem.rooms) {
         if (room.isOccupied()) {
@@ -13,77 +20,86 @@ public class CheckOut {
     return false;
     
 }
-    
-    public static void checkOutGuest() {
+   
+    public CheckOut() {
         
-        Scanner scanner = new Scanner(System.in);
+        //add JFrame
+        setTitle(" Check-out a Room");
+        setSize(400, 200);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-        int roomNum;
+        //add JLabel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(2, 2, 10, 10));
+        mainPanel.add(new JLabel("Select a room to check-out:"));
         
-        Booking booking = null;
-        System.out.println("-------------------------");
-        while (true) {           
-            // find unoccupied rooms
-        System.out.println("Current occupied Room(s):");
-for (HotelRoom room : HotelBookingSystem.rooms) {
-    if (room.isOccupied()) {
-        System.out.println("Rooms: " + room.getRoomNum());
+        //add ComboBox
+        roomComboBox = new JComboBox<>();
+        //add occupied rooms to combo box
+        updateRoomComboBox();
+        mainPanel.add(roomComboBox);
+
+        //add JButton
+        checkOutButton = new JButton("Check-out");
+        checkOutButton.addActionListener(this);
+        mainPanel.add(new JLabel());
+        mainPanel.add(checkOutButton);
+        add(mainPanel);
     }
-}
 
-System.out.println("-------------------------");
-
-            // prompt user to enter the room number
-            System.out.println("Please enter the room number you want to check-out:");
-            if (scanner.hasNextInt()) 
-            {
-                roomNum = scanner.nextInt();
-                scanner.nextLine(); // consume the newline character
-
-                // find the booking with the given room number
-                for (Booking b : HotelBookingSystem.bookings) {
-                    if (b.getRoom().getRoomNum() == roomNum) {
-                        booking = b;
-                        break;
-                    }
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == checkOutButton) {
+            int roomNum = (int) roomComboBox.getSelectedItem();
+            
+            // find the booking with the given room number
+            Booking booking = null;
+            for (Booking b : HotelBookingSystem.bookings) {
+                if (b.getRoom().getRoomNum() == roomNum) {
+                    booking = b;
+                    break;
                 }
+            }
+    
+                // calculate the total amount due
+                double totalAmount = booking.getTotalCost();
 
-                if (booking == null) {
-                    System.out.println("No booking found for room number " + roomNum);
-                } else {
-                    break; // valid input, break out of the loop
-                }
-            } else {
-                System.out.println("Invalid input. Please enter a valid room number.");
-                scanner.nextLine(); // consume the invalid input
+                // set the room to unoccupied
+                booking.getRoom().setOccupied(false);
+
+                // remove the booking from the list of bookings
+                HotelBookingSystem.bookings.remove(booking);
+
+                // save the updated list of bookings to file
+                DataSave.saveBookings(HotelBookingSystem.bookings);
+
+                // Display checkout details
+                String checkoutMessage = "-------------------------\n" +
+                        "Check-out successful!\n" +
+                        "-------------------------\n" +
+                        "Check-out Information:\n" +
+                        "Guest Name: " + booking.getGuest().getName() + "\n" +
+                        "Guest Email: " + booking.getGuest().getEmail() + "\n" +
+                        "Guest Phone: " + booking.getGuest().getPhone() + "\n" +
+                        "Room Number: " + roomNum + "\n" +
+                        "Check-in Date: " + booking.getCheckInDate() + "\n" +
+                        "Check-out Date: " + booking.getCheckOutDate() + "\n" +
+                        "Nightly Stay Booked For: " + booking.getNightlyStay() + " day(s)\n" +
+                        "Total Amount Due: $" + totalAmount + "\n" +
+                        "-------------------------";
+
+                JOptionPane.showMessageDialog(this, checkoutMessage, "Checkout Successful", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+        }
+    }
+
+    // Update combo box with occupied rooms
+    private void updateRoomComboBox() {
+        roomComboBox.removeAllItems();
+        for (Booking booking : HotelBookingSystem.bookings) {
+            if (booking.getRoom().isOccupied()) {
+                roomComboBox.addItem(booking.getRoom().getRoomNum());
             }
         }
-
-        // calculate the total amount due
-        double totalAmount = booking.getTotalCost();
-
-        // set the room to unoccupied
-        booking.getRoom().setOccupied(false);
-
-        // remove the booking from the list of bookings
-        HotelBookingSystem.bookings.remove(booking);
-        
-        System.out.println("-------------------------");
-        System.out.println("Check-out successful!");
-        System.out.println("-------------------------");
-        System.out.println("Guest name: " + booking.getGuest().getName());
-        System.out.println("Guest email: " + booking.getGuest().getEmail());
-        System.out.println("Guest phone: " + booking.getGuest().getPhone());
-        System.out.println("Room number: " + roomNum);
-        System.out.println("Check-in date: " + booking.getCheckInDate());
-        System.out.println("Check-out date: " + booking.getCheckOutDate());
-        System.out.println("Nightly stay booked for: " + booking.getNightlyStay() + " day(s)");
-        System.out.println("Total amount due: $" + totalAmount);
-        System.out.println("-------------------------");
-
-        // save the updated list of bookings to file
-        DataSave.saveBookings(HotelBookingSystem.bookings);
     }
 }
-
-
