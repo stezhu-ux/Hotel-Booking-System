@@ -102,9 +102,9 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
             }
         }
         
-        else if (e.getSource() == viewAllButton) 
+       else if (e.getSource() == viewAllButton) 
         {
-            RoomInfo.viewAllRooms();
+        RoomInfo.viewAllRooms();
         }
         
         else if (e.getSource() == viewUnoccupiedButton) 
