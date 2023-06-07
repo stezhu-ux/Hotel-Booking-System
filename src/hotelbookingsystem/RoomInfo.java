@@ -2,18 +2,61 @@ package hotelbookingsystem;
 
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoomInfo {
 
-    // Method to view all rooms
+   // Method to view all rooms
     public static void viewAllRooms() {
-        System.out.println("-------------------------");
-        System.out.println("List of all rooms and details");
-            System.out.println("-------------------------");
+        //add JFrame
+        JFrame frame = new JFrame("View All Rooms");
+        frame.setSize(500, 400);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        
+        //add JLabel
+        JLabel titleLabel = new JLabel("List of all rooms and details");
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        
+        //add JTextArea
+        JTextArea roomInfoArea = new JTextArea();
+        roomInfoArea.setEditable(false);
+        roomInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        JScrollPane scrollPane = new JScrollPane(roomInfoArea);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        //add JButton
+        JButton refreshButton = new JButton("Update");
+        refreshButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                refreshRoomInfo(roomInfoArea);
+                }
+            }
+        );
+        mainPanel.add(refreshButton, BorderLayout.SOUTH);
+        
+         // Initial room information update
+        refreshRoomInfo(roomInfoArea);
+
+        frame.add(mainPanel);
+        frame.setVisible(true);
+    }
+    //add update list
+    private static void refreshRoomInfo(JTextArea roomInfoArea) {
+        StringBuilder roomInfoBuilder = new StringBuilder();
         for (HotelRoom room : HotelBookingSystem.rooms) {
-            System.out.println(room.toString());
-            System.out.println("-------------------------");
+            roomInfoBuilder.append(room.toString()).append("\n");
+            roomInfoBuilder.append("-------------------------").append("\n");
         }
+        roomInfoArea.setText(roomInfoBuilder.toString());   
     }
 
     // Method to view room details by room number
@@ -96,27 +139,27 @@ public static void viewSpecificRoomNumber() {
         if (!found) {
             System.out.println("Guest not found.");
             System.out.println("-------------------------");
-        }
+         }
         }
 
     
-public static void listUnoccupiedRooms() {
+    public static void listUnoccupiedRooms() {
      System.out.println("-------------------------");
     System.out.println("List of all unoccupied rooms:");
     System.out.println("-------------------------");
     boolean Unoccupied = false;
-    for (HotelRoom room : HotelBookingSystem.rooms) {
-        if (!room.isOccupied()) {
+        for (HotelRoom room : HotelBookingSystem.rooms) {
+            if (!room.isOccupied()) {
             System.out.println(room.toString());
             System.out.println("-------------------------");
             Unoccupied = true;
+            }
         }
-    }
     if (!Unoccupied) {
         System.out.println("No unoccupied rooms found.");
         System.out.println("-------------------------");
     }
-}
+            }
 public static void listOccupiedRooms() {
      System.out.println("-------------------------");
     System.out.println("List of occupied rooms:");
