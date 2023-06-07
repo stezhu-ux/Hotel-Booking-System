@@ -154,7 +154,7 @@ public class BookRoom extends JFrame implements ActionListener {
                     break;
                 }
             }
-
+    
             // Create guest and booking objects
             Guest guest = new Guest(name, email, phone);
             Booking booking = new Booking(guest, room, checkInDate, checkOutDate);
