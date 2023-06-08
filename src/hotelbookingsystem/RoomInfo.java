@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +38,13 @@ public class RoomInfo {
 
         //add JButton
         JButton refreshButton = new JButton("Update");
+           mainPanel.add(refreshButton, BorderLayout.SOUTH);
         refreshButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 refreshRoomInfo(roomInfoArea);
                 }
             }
         );
-        mainPanel.add(refreshButton, BorderLayout.SOUTH);
         
          // Initial room information update
         refreshRoomInfo(roomInfoArea);
@@ -62,41 +64,83 @@ public class RoomInfo {
     }
 
     // Method to view room details by room number
-public static void viewSpecificRoomNumber() {
-    Scanner scanner = new Scanner(System.in);
-    int roomNum;
-    boolean isValidRoomNum = false;
+    public static void viewSpecificRoomNumber() {
+        //add JFrame
+        JFrame frame = new JFrame("View Specific Room");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-    while (!isValidRoomNum) {
-        try {
-            System.out.println("Please enter the room number you would like to view:");
-            roomNum = scanner.nextInt();
-            scanner.nextLine(); // consume the newline character
+        //add JPanel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
 
-            System.out.println("-------------------------");
-            for (HotelRoom room : HotelBookingSystem.rooms) {
-                if (room.getRoomNum() == roomNum) {
-                    isValidRoomNum = true;
-                    System.out.println(room.toString());
-                    for (Booking booking : HotelBookingSystem.bookings) {
-                        if (booking.getRoom().getRoomNum() == roomNum) {
-                            System.out.println(booking.getGuest().toString());
-                            System.out.println("-------------------------");
-                            return;
-                        }
+        JPanel inputPanel = new JPanel();
+        //add JLabel
+        JLabel roomNumLabel = new JLabel("Room Number:");
+         inputPanel.add(roomNumLabel);
+         
+        //add JTextField
+        JTextField roomNumField = new JTextField(10);
+         inputPanel.add(roomNumField);
+         
+        //text field only accepts numbers
+        roomNumField.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if (!Character.isDigit(c) || Character.isSpaceChar(c)) {
+                    evt.consume();
                     }
                 }
             }
+        );
+        //add JButton
+        JButton searchButton = new JButton("Search");
+         inputPanel.add(searchButton);
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
 
-            if (!isValidRoomNum) {
-                System.out.println("Invalid room number. Please try again.");
+        //add JTextArea
+        JTextArea roomInfoArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(roomInfoArea);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+         
+        //button fuction
+        searchButton.addActionListener(e -> {
+            int roomNum = Integer.parseInt(roomNumField.getText());
+            refreshSpecificRoomInfo(roomNum, roomInfoArea);
             }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a valid room number.");
-            scanner.nextLine(); // consume the invalid input
-        }
+        );
+        frame.add(mainPanel);
+        frame.setVisible(true);
     }
-} 
+    
+    private static void refreshSpecificRoomInfo(int roomNum, JTextArea roomInfoArea) {
+        StringBuilder roomInfoBuilder = new StringBuilder();
+        boolean found = false;
+        
+        //print room info
+        for (HotelRoom room : HotelBookingSystem.rooms) {
+            if (room.getRoomNum() == roomNum) {
+                roomInfoBuilder.append(room.toString()).append("\n");
+                roomInfoBuilder.append("-------------------------").append("\n");
+                found = true;
+                
+                //print room and guest info
+                for (Booking booking : HotelBookingSystem.bookings) {
+                    if (booking.getRoom().getRoomNum() == roomNum) {
+                        roomInfoBuilder.append(booking.getGuest().toString()).append("\n");
+                        roomInfoBuilder.append("-------------------------").append("\n");   
+                    }
+                }
+            }
+        }
+        //print error message if room not found
+        if (!found) {
+            roomInfoBuilder.append("Room not found.").append("\n");
+        }
+
+        roomInfoArea.setText(roomInfoBuilder.toString());
+    }
+
     public static void listAllGuests() {
          System.out.println("-------------------------");
         System.out.println("List of all guests:");
