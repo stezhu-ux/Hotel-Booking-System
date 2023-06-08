@@ -23,6 +23,7 @@ public class BookRoom extends JFrame implements ActionListener {
     private final JTextField checkOutField;
     private final JComboBox<String> roomComboBox;
     private final JButton bookButton;
+    private final JButton updateButton;
 
     // Check if any room is unoccupied
     public static boolean checkAvailability() {
@@ -41,7 +42,7 @@ public class BookRoom extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(7, 2, 10, 10));
+        mainPanel.setLayout(new GridLayout(8, 2, 10, 10));
 
         mainPanel.add(new JLabel("Select Room:"));
         roomComboBox = new JComboBox<>();
@@ -92,10 +93,20 @@ public class BookRoom extends JFrame implements ActionListener {
         mainPanel.add(new JLabel());
         mainPanel.add(bookButton);
 
+       updateButton = new JButton("Update");
+       updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateRoomComboBox();
+            }
+        }
+       );
+        mainPanel.add(new JLabel());
+        mainPanel.add(updateButton);
+
         add(mainPanel);
     }
-
-    public void actionPerformed(ActionEvent e) {
+    
+    public void actionPerformed(ActionEvent e) {     
         if (e.getSource() == bookButton) {
             String name = nameField.getText().trim();
             String email = emailField.getText().trim();
@@ -174,6 +185,13 @@ public class BookRoom extends JFrame implements ActionListener {
                     "------------------------- \n"
                     + "Booking successful!"
                     + "\n-------------------------\n" + booking.toString());
+            
+            // Clear the text fields
+            nameField.setText("");
+            emailField.setText("");
+            phoneField.setText("");
+            checkInField.setText("");
+            checkOutField.setText("");
             
              // Update combo box
                 updateRoomComboBox();

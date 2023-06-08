@@ -4,11 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CheckOut extends JFrame implements ActionListener {
 
     private final JComboBox<Integer> roomComboBox;
     private final JButton checkOutButton;
+    private final JButton updateButton;
 
      // Check if any room is occupied
     public static boolean checkAvailability() {
@@ -30,7 +34,7 @@ public class CheckOut extends JFrame implements ActionListener {
 
         //add JLabel
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(2, 2, 10, 10));
+        mainPanel.setLayout(new GridLayout(3, 2, 10, 10));
         mainPanel.add(new JLabel("Select a room to check-out:"));
         
         //add ComboBox
@@ -44,11 +48,23 @@ public class CheckOut extends JFrame implements ActionListener {
         checkOutButton.addActionListener(this);
         mainPanel.add(new JLabel());
         mainPanel.add(checkOutButton);
+    
+        updateButton = new JButton("Update");
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateRoomComboBox();
+            }
+        }
+        );
+        mainPanel.add(new JLabel());
+        mainPanel.add(updateButton);
+
         add(mainPanel);
     }
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == checkOutButton) {
+            
             int roomNum = (int) roomComboBox.getSelectedItem();
             
             // find the booking with the given room number
@@ -59,6 +75,12 @@ public class CheckOut extends JFrame implements ActionListener {
                     break;
                 }
             }
+              if (booking == null) {
+                JOptionPane.showMessageDialog(this, "The selected room is no longer available. Please choose another room.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
+                // Update combo box
+                updateRoomComboBox();
+                return;
+            }   
                 
                 // set the room to unoccupied
                 booking.getRoom().setOccupied(false);
@@ -74,17 +96,32 @@ public class CheckOut extends JFrame implements ActionListener {
                     "------------------------- \n"
                     + "Check-out successful!"
                     + "\n-------------------------\n" + booking.toString());
-            dispose();
+            
+            // Update combo box
+               updateRoomComboBox();
         }
     }
 
     // Update combo box with occupied rooms
     private void updateRoomComboBox() {
-        roomComboBox.removeAllItems();
+       roomComboBox.removeAllItems();
+
+        List<Integer> occupiedRoomNumbers = new ArrayList<>();
         for (Booking booking : HotelBookingSystem.bookings) {
             if (booking.getRoom().isOccupied()) {
-                roomComboBox.addItem(booking.getRoom().getRoomNum());
+                occupiedRoomNumbers.add(booking.getRoom().getRoomNum());
             }
+        }
+
+        if (!occupiedRoomNumbers.isEmpty()) {
+            Collections.sort(occupiedRoomNumbers);
+
+            for (Integer roomNum : occupiedRoomNumbers) {
+                roomComboBox.addItem(roomNum);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No rooms are available for Check-out. \nclosing window", "No Availability", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
         }
     }
 }
