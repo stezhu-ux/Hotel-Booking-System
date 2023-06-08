@@ -141,23 +141,67 @@ public class RoomInfo {
         roomInfoArea.setText(roomInfoBuilder.toString());
     }
 
+    //method to view all guest
     public static void listAllGuests() {
-         System.out.println("-------------------------");
-        System.out.println("List of all guests:");
-         System.out.println("-------------------------");
-        if (HotelBookingSystem.bookings.isEmpty()) {
-            System.out.println("No bookings found.");
-        } else {
-            for (Booking booking : HotelBookingSystem.bookings) {
-                Guest guest = booking.getGuest();
-                HotelRoom room = booking.getRoom();
+    // Create JFrame
+    JFrame frame = new JFrame("View All Guests");
+    frame.setSize(500, 400);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                System.out.println(guest.toString() + " Ocupied in room " + room.getRoomNum());
-                System.out.println("-------------------------");
+    // Create JPanel
+    JPanel mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout());
+
+    // Create JLabel
+    JLabel titleLabel = new JLabel("List of all guests");
+    titleLabel.setHorizontalAlignment(JLabel.CENTER);
+    mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+    // Create JTextArea
+    JTextArea guestInfoArea = new JTextArea();
+    guestInfoArea.setEditable(false);
+    guestInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+    JScrollPane scrollPane = new JScrollPane(guestInfoArea);
+    mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+    // Create JButton
+    JButton refreshButton = new JButton("Update");
+    mainPanel.add(refreshButton, BorderLayout.SOUTH);
+    refreshButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            refreshGuestInfo(guestInfoArea);
+            }
+        }
+    );
+
+    // Initial guest information update
+    refreshGuestInfo(guestInfoArea);
+
+    frame.add(mainPanel);
+    frame.setVisible(true);
+}
+
+    // Print and update guest list
+    private static void refreshGuestInfo(JTextArea guestInfoArea) {
+    guestInfoArea.setText(""); // Clear the previous content
+    if (HotelBookingSystem.bookings.isEmpty()) {
+        // Add message if no bookings found
+        guestInfoArea.append("No bookings found.\n");
+    } 
+    else 
+    {
+        //print guest list
+        for (Booking booking : HotelBookingSystem.bookings) {
+            Guest guest = booking.getGuest();
+            HotelRoom room = booking.getRoom();
+
+            // Append guest and room information
+            guestInfoArea.append(guest.toString() + "\n Occupied in room " + room.getRoomNum() + "\n");
+            guestInfoArea.append("-------------------------\n");
         }
     }
 }
- 
+
         public static void findGuestByName() {
             
         JFrame frame = new JFrame("Find Guest By Name");
