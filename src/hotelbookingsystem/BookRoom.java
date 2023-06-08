@@ -10,6 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class BookRoom extends JFrame implements ActionListener {
 
@@ -102,9 +105,7 @@ public class BookRoom extends JFrame implements ActionListener {
 
             // checks and prompt user to enter valid guest name
             if (name.isEmpty() || !name.matches("^[a-zA-Z]+$")) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid guest name.\n(letters only)", "Error Message", JOptionPane.INFORMATION_MESSAGE);
-
-                
+                JOptionPane.showMessageDialog(this, "Please enter a valid guest name.\n(letters only)", "Error Message", JOptionPane.INFORMATION_MESSAGE);  
                 return;
             }
 
@@ -154,30 +155,51 @@ public class BookRoom extends JFrame implements ActionListener {
                     break;
                 }
             }
-    
+            if (room == null) {
+                JOptionPane.showMessageDialog(this, "The selected room is no longer available. Please choose another room.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
+                // Update combo box
+                updateRoomComboBox();
+                return;
+            }   
+            
             // Create guest and booking objects
             Guest guest = new Guest(name, email, phone);
             Booking booking = new Booking(guest, room, checkInDate, checkOutDate);
             room.setOccupied(true);
             HotelBookingSystem.bookings.add(booking);
-            DataSave.saveBookings(HotelBookingSystem.bookings);
-
+            DataSave.saveBookings(HotelBookingSystem.bookings);     
+            
             // Display booking details
             JOptionPane.showMessageDialog(this,
                     "------------------------- \n"
                     + "Booking successful!"
                     + "\n-------------------------\n" + booking.toString());
-            dispose();
+            
+             // Update combo box
+                updateRoomComboBox();
         }
     }
     
     // Update combo box with unoccupied rooms
     private void updateRoomComboBox() {
         roomComboBox.removeAllItems();
+        
+        List<Integer> unoccupiedRoomNumbers = new ArrayList<>();
         for (HotelRoom room : HotelBookingSystem.rooms) {
             if (!room.isOccupied()) {
-                roomComboBox.addItem(String.valueOf(room.getRoomNum()));
+                unoccupiedRoomNumbers.add(room.getRoomNum());
             }
+        }
+
+        if (!unoccupiedRoomNumbers.isEmpty()) {
+            Collections.sort(unoccupiedRoomNumbers);
+
+            for (Integer roomNum : unoccupiedRoomNumbers) {
+                roomComboBox.addItem(String.valueOf(roomNum));
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No rooms are available for booking. \nclosing window", "No Availability", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
         }
     }
 }
