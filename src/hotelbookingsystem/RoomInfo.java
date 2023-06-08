@@ -170,18 +170,18 @@ public static void viewSpecificRoomNumber() {
         
         //add JButton
         JButton refreshButton = new JButton("Update");
-        refreshButton.addActionListener(e -> refreshRoomInfo(roomInfoArea, unoccupiedRooms));
+        refreshButton.addActionListener(e -> refreshUnoccupiedRoomInfo(roomInfoArea, unoccupiedRooms));
         mainPanel.add(refreshButton, BorderLayout.SOUTH);
         
         // Initial room information update
-        refreshRoomInfo(roomInfoArea, unoccupiedRooms);
+        refreshUnoccupiedRoomInfo(roomInfoArea, unoccupiedRooms);
 
         frame.add(mainPanel);
         frame.setVisible(true);
     }
   
      //print and update list
-    private static void refreshRoomInfo(JTextArea roomInfoArea, List<HotelRoom> unoccupiedRooms) {
+    private static void refreshUnoccupiedRoomInfo(JTextArea roomInfoArea, List<HotelRoom> unoccupiedRooms) {
         // Clear the list before populating it again
         unoccupiedRooms.clear(); 
         
@@ -210,29 +210,62 @@ public static void viewSpecificRoomNumber() {
         roomInfoArea.setText(roomInfoBuilder.toString());
     }
     
-public static void listOccupiedRooms() {
-     System.out.println("-------------------------");
-    System.out.println("List of occupied rooms:");
-    System.out.println("-------------------------");
-    boolean occupied = false;
-    for (Booking booking : HotelBookingSystem.bookings) {
-        if (booking.getRoom().isOccupied()) {
-            System.out.println("Room " + booking.getRoom().getRoomNum() + " is occupied by");
-            System.out.println("Guest name: " + booking.getGuest().getName());
-            System.out.println("Guest email: " + booking.getGuest().getEmail());
-            System.out.println("Guest phone: " + booking.getGuest().getPhone());    
-            System.out.println("Check-in date: " + booking.getCheckInDate());
-            System.out.println("Check-out date: " + booking.getCheckOutDate());
-            System.out.println("Nightly stay booked for: " + booking.getNightlyStay() + " day(s)");
-            System.out.println("Total amount due: $" + booking.getTotalCost());
-            System.out.println("-------------------------");
-            occupied = true;
-        }
+    public static void listOccupiedRooms() {
+        // Create JFrame
+        JFrame frame = new JFrame("View Occupied Rooms");
+        frame.setSize(500, 400);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Create JPanel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+
+        // Create JLabel
+        JLabel titleLabel = new JLabel("List of occupied rooms:");
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Create JTextArea
+        JTextArea roomInfoArea = new JTextArea();
+        roomInfoArea.setEditable(false);
+        roomInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        JScrollPane scrollPane = new JScrollPane(roomInfoArea);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Create JButton
+        JButton refreshButton = new JButton("Update");
+        refreshButton.addActionListener(e -> refreshOccupiedRoomInfo(roomInfoArea));
+        mainPanel.add(refreshButton, BorderLayout.SOUTH);
+
+        // Initial room information update
+        refreshOccupiedRoomInfo(roomInfoArea);
+
+        frame.add(mainPanel);
+        frame.setVisible(true);
     }
-    if (!occupied) {
-        System.out.println("No rooms are currently occupied.");
-        System.out.println("-------------------------");
-        
-    }
-  }
+
+    //print and update list
+   private static void refreshOccupiedRoomInfo(JTextArea roomInfoArea) {
+       StringBuilder roomInfoBuilder = new StringBuilder();
+       boolean occupied = false;
+       for (Booking booking : HotelBookingSystem.bookings) {
+           if (booking.getRoom().isOccupied()) {
+               roomInfoBuilder.append("Room ").append(booking.getRoom().getRoomNum()).append(" is occupied by").append("\n");
+               roomInfoBuilder.append("Guest name: ").append(booking.getGuest().getName()).append("\n");
+               roomInfoBuilder.append("Guest email: ").append(booking.getGuest().getEmail()).append("\n");
+               roomInfoBuilder.append("Guest phone: ").append(booking.getGuest().getPhone()).append("\n");
+               roomInfoBuilder.append("Check-in date: ").append(booking.getCheckInDate()).append("\n");
+               roomInfoBuilder.append("Check-out date: ").append(booking.getCheckOutDate()).append("\n");
+               roomInfoBuilder.append("Nightly stay booked for: ").append(booking.getNightlyStay()).append(" day(s)").append("\n");
+               roomInfoBuilder.append("Total amount due: $").append(booking.getTotalCost()).append("\n");
+               roomInfoBuilder.append("-------------------------").append("\n");
+               occupied = true;
+           }
+       }
+       if (!occupied) {
+           roomInfoBuilder.append("No rooms are currently occupied.").append("\n");
+           roomInfoBuilder.append("-------------------------").append("\n");
+       }
+       roomInfoArea.setText(roomInfoBuilder.toString());
+       }
 }
