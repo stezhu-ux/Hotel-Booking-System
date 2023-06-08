@@ -159,35 +159,94 @@ public class RoomInfo {
 }
  
         public static void findGuestByName() {
-        Scanner scanner = new Scanner(System.in);
-        String name = "";
+            
+        JFrame frame = new JFrame("Find Guest By Name");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        while (name.isEmpty()) {
-            System.out.println("Please enter the name of the guest you would like to find:");
-            name = scanner.nextLine().trim();
+        // Create JPanel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
 
-            if (!name.matches("[a-zA-Z]+")) {
-                System.out.println("Invalid input. Please enter letters only.");
-                name = "";
+        JPanel inputPanel = new JPanel();
+        // Create JLabel
+        JLabel nameLabel = new JLabel("Guest Name:");
+        inputPanel.add(nameLabel);
+
+        // Create JTextField
+        JTextField nameField = new JTextField(10);
+        //text field only accepts letters
+        nameField.addKeyListener(new KeyAdapter() {
+        public void keyTyped(KeyEvent evt) {
+        char c = evt.getKeyChar();
+        if (!Character.isLetter(c)) {
+            evt.consume();
+                    }
+                }
             }
-        }
+        );
+        inputPanel.add(nameField);
 
+        // Create JButton
+        JButton searchButton = new JButton("Search");
+        inputPanel.add(searchButton);
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
+
+        // Create JTextArea
+        JTextArea guestInfoArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(guestInfoArea);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Button function
+        searchButton.addActionListener(e -> {
+            String name = nameField.getText().trim();
+            refreshGuestInfoByName(name, guestInfoArea);
+            }
+        );
+
+        frame.add(mainPanel);
+        frame.setVisible(true);
+    }
+
+    private static void refreshGuestInfoByName(String name, JTextArea guestInfoArea) {
+        StringBuilder guestInfoBuilder = new StringBuilder();
         boolean found = false;
+        
+        //print guest info
         for (Booking booking : HotelBookingSystem.bookings) {
             if (booking.getGuest().getName().equalsIgnoreCase(name)) {
-                System.out.println("-------------------------");
-                System.out.println("Guest found in room " + booking.getRoom().getRoomNum() + ":");
-                System.out.println(booking.getGuest().toString());
-                System.out.println("-------------------------");
-                found = true;
-            }
-        }
-        if (!found) {
-            System.out.println("Guest not found.");
-            System.out.println("-------------------------");
-         }
-        }
+                guestInfoBuilder.append("Guest found in room ").append(booking.getRoom().getRoomNum()).append(":").append("\n");
+                guestInfoBuilder.append("-------------------------").append("\n");
+                guestInfoBuilder.append(booking.getGuest().toString()).append("\n");
+                guestInfoBuilder.append("-------------------------").append("\n");
 
+            // Find room info
+            HotelRoom room = null;
+            for (HotelRoom r : HotelBookingSystem.rooms) {
+                if (r.getRoomNum() == booking.getRoom().getRoomNum()) {
+                    room = r;
+                }
+            }
+
+            // Print room info if found
+            if (room != null) {
+                guestInfoBuilder.append("Room Info:").append("\n");
+                guestInfoBuilder.append(room.toString()).append("\n");
+                guestInfoBuilder.append("-------------------------").append("\n");
+            }
+            found = true;
+        }
+    }
+
+    // Print message if no guest found
+    if (!found) {
+        guestInfoBuilder.append("Guest not found.").append("\n");
+        guestInfoBuilder.append("-------------------------").append("\n");
+    }
+
+    guestInfoArea.setText(guestInfoBuilder.toString());
+}
+    
     public static void listUnoccupiedRooms() {
         List<HotelRoom> unoccupiedRooms = new ArrayList<>();
 

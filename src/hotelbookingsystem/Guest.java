@@ -37,7 +37,7 @@ public class Guest {
 
     @Override
     public String toString() {
-        return "Guest name: " + name + ". Email: " + email + ". Phone number: " + phone +".";
+        return "Guest name: " + name + ".\n Email: " + email + ".\n Phone number: " + phone +".";
     }
 }
 
