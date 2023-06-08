@@ -17,7 +17,8 @@ public class RoomInfo {
         JFrame frame = new JFrame("View All Rooms");
         frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        
+        //add JPanel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         
@@ -49,7 +50,8 @@ public class RoomInfo {
         frame.add(mainPanel);
         frame.setVisible(true);
     }
-    //add update list
+  
+    //print and update list
     private static void refreshRoomInfo(JTextArea roomInfoArea) {
         StringBuilder roomInfoBuilder = new StringBuilder();
         for (HotelRoom room : HotelBookingSystem.rooms) {
@@ -142,24 +144,72 @@ public static void viewSpecificRoomNumber() {
          }
         }
 
-    
     public static void listUnoccupiedRooms() {
-     System.out.println("-------------------------");
-    System.out.println("List of all unoccupied rooms:");
-    System.out.println("-------------------------");
-    boolean Unoccupied = false;
+        List<HotelRoom> unoccupiedRooms = new ArrayList<>();
+
+        //add JFrame
+        JFrame frame = new JFrame("View Unoccupied Rooms");
+        frame.setSize(500, 400);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        //add JPanel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        
+        //add JLLabel
+        JLabel titleLabel = new JLabel("List of unoccupied rooms:");
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+        
+        //add JTextArea
+        JTextArea roomInfoArea = new JTextArea();
+        roomInfoArea.setEditable(false);
+        roomInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        JScrollPane scrollPane = new JScrollPane(roomInfoArea);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        
+        //add JButton
+        JButton refreshButton = new JButton("Update");
+        refreshButton.addActionListener(e -> refreshRoomInfo(roomInfoArea, unoccupiedRooms));
+        mainPanel.add(refreshButton, BorderLayout.SOUTH);
+        
+        // Initial room information update
+        refreshRoomInfo(roomInfoArea, unoccupiedRooms);
+
+        frame.add(mainPanel);
+        frame.setVisible(true);
+    }
+  
+     //print and update list
+    private static void refreshRoomInfo(JTextArea roomInfoArea, List<HotelRoom> unoccupiedRooms) {
+        // Clear the list before populating it again
+        unoccupiedRooms.clear(); 
+        
+        //add unoccupied rooms to list
         for (HotelRoom room : HotelBookingSystem.rooms) {
             if (!room.isOccupied()) {
-            System.out.println(room.toString());
-            System.out.println("-------------------------");
-            Unoccupied = true;
+                unoccupiedRooms.add(room);
             }
         }
-    if (!Unoccupied) {
-        System.out.println("No unoccupied rooms found.");
-        System.out.println("-------------------------");
-    }
+        
+        //print unoccupied rooms
+        StringBuilder roomInfoBuilder = new StringBuilder();
+        if (!unoccupiedRooms.isEmpty()) {
+            for (HotelRoom room : unoccupiedRooms) 
+            {
+                roomInfoBuilder.append(room.toString()).append("\n");
+                roomInfoBuilder.append("-------------------------").append("\n");
             }
+        }
+        //print message if no unoccupied rooms
+        else 
+        {
+            roomInfoBuilder.append("No unoccupied rooms found.").append("\n");
+            roomInfoBuilder.append("-------------------------").append("\n");
+        }
+        roomInfoArea.setText(roomInfoBuilder.toString());
+    }
+    
 public static void listOccupiedRooms() {
      System.out.println("-------------------------");
     System.out.println("List of occupied rooms:");
