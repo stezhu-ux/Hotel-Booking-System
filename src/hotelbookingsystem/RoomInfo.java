@@ -50,6 +50,7 @@ public class RoomInfo {
         frame.add(mainPanel);
         frame.setVisible(true);
     }
+  
     //print and update list
     private static void refreshRoomInfo(JTextArea roomInfoArea) {
         StringBuilder roomInfoBuilder = new StringBuilder();
@@ -178,7 +179,7 @@ public static void viewSpecificRoomNumber() {
         frame.add(mainPanel);
         frame.setVisible(true);
     }
-    
+  
      //print and update list
     private static void refreshRoomInfo(JTextArea roomInfoArea, List<HotelRoom> unoccupiedRooms) {
         // Clear the list before populating it again
