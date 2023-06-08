@@ -1,8 +1,6 @@
 package hotelbookingsystem;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 import java.io.File;
 import javax.swing.*;
 import java.awt.*;
@@ -13,18 +11,16 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
 
     static ArrayList<HotelRoom> rooms = new ArrayList<>();
     public static ArrayList<Booking> bookings = new ArrayList<>();
-    
-    private static Scanner scanner = new Scanner(System.in); 
 
-    private JButton bookButton;
-    private JButton checkoutButton;
-    private JButton viewAllButton;
-    private JButton viewUnoccupiedButton;
-    private JButton viewOccupiedButton;
-    private JButton viewSpecificButton;
-    private JButton findGuestButton;
-    private JButton listGuestsButton;
-    private JButton exitButton;
+    private final JButton bookButton;
+    private final JButton checkoutButton;
+    private final JButton viewAllButton;
+    private final JButton viewUnoccupiedButton;
+    private final JButton viewOccupiedButton;
+    private final JButton viewSpecificButton;
+    private final JButton findGuestButton;
+    private final JButton listGuestsButton;
+    private final JButton exitButton;
 
     public HotelBookingSystem() {
         setTitle("Hotel Booking System");
@@ -86,7 +82,7 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
             } 
             else 
             {
-                JOptionPane.showMessageDialog(this, "Sorry, there are no rooms available.");
+                JOptionPane.showMessageDialog(this, "Sorry, there are no rooms available.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         
@@ -98,7 +94,7 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
                     }
                 );
             } else {
-                JOptionPane.showMessageDialog(this, "Sorry, all rooms are unoccupied.");
+                JOptionPane.showMessageDialog(this, "Sorry, all rooms are unoccupied.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         
@@ -140,15 +136,15 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
     }
     
     public static void main(String[] args) {
-        //initialize hotel rooms
-
+        
+    //initialize hotel rooms
     rooms.add(new StandardRoom(1, 100, BedType.SINGLE));
     rooms.add(new StandardRoom(2, 100, BedType.SINGLE));
     rooms.add(new DeluxeRoom(3, 300, 2, BedType.QUEEN));
     rooms.add(new DeluxeRoom(4, 300, 2, BedType.QUEEN));
     rooms.add(new PenthouseRoom(5, 500, 3, BedType.KING, true));
     
-        // load previous bookings
+       // load previous bookings
        File bookingsFile = new File("bookings.txt");
    if (bookingsFile.exists()) {
        bookings.addAll(DataRead.loadBookings());

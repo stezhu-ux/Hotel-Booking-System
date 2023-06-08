@@ -10,7 +10,6 @@ public class PenthouseRoom extends HotelRoom {
         super(roomNum, "Penthouse", nightlyRate);
         this.numBeds = numBeds;
         this.bedType = bedType;
-
         this.hasKitchen = hasKitchen;
     }
 
@@ -30,8 +29,6 @@ public class PenthouseRoom extends HotelRoom {
         this.bedType = bedType;
     }
 
-    
-
     public boolean hasKitchen() {
         return hasKitchen;
     }
@@ -40,11 +37,8 @@ public class PenthouseRoom extends HotelRoom {
         this.hasKitchen = hasKitchen;
     }
 
-  
-
     @Override
     public String toString() {
         return "Room " + getRoomNum() + "\n" + "Type " + getType() + "\n" + numBeds + " " + bedType + " bed(s)" + "\n" + "Price $" + getNightlyRate() + " per night" + "\n" + "Kitchen: " + hasKitchen + "\n" + "Room is " + (isAvailable() ? "Available" : "Occupied");
     }
 }
-

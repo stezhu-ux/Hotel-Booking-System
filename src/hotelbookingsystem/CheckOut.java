@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 
 public class CheckOut extends JFrame implements ActionListener {
 
-    private JComboBox<Integer> roomComboBox;
-    private JButton checkOutButton;
+    private final JComboBox<Integer> roomComboBox;
+    private final JButton checkOutButton;
 
      // Check if any room is occupied
     public static boolean checkAvailability() {
@@ -18,7 +18,6 @@ public class CheckOut extends JFrame implements ActionListener {
         }
     }
     return false;
-    
 }
    
     public CheckOut() {
@@ -60,10 +59,7 @@ public class CheckOut extends JFrame implements ActionListener {
                     break;
                 }
             }
-    
-                // calculate the total amount due
-                double totalAmount = booking.getTotalCost();
-
+                
                 // set the room to unoccupied
                 booking.getRoom().setOccupied(false);
 
@@ -74,22 +70,11 @@ public class CheckOut extends JFrame implements ActionListener {
                 DataSave.saveBookings(HotelBookingSystem.bookings);
 
                 // Display checkout details
-                String checkoutMessage = "-------------------------\n" +
-                        "Check-out successful!\n" +
-                        "-------------------------\n" +
-                        "Check-out Information:\n" +
-                        "Guest Name: " + booking.getGuest().getName() + "\n" +
-                        "Guest Email: " + booking.getGuest().getEmail() + "\n" +
-                        "Guest Phone: " + booking.getGuest().getPhone() + "\n" +
-                        "Room Number: " + roomNum + "\n" +
-                        "Check-in Date: " + booking.getCheckInDate() + "\n" +
-                        "Check-out Date: " + booking.getCheckOutDate() + "\n" +
-                        "Nightly Stay Booked For: " + booking.getNightlyStay() + " day(s)\n" +
-                        "Total Amount Due: $" + totalAmount + "\n" +
-                        "-------------------------";
-
-                JOptionPane.showMessageDialog(this, checkoutMessage, "Checkout Successful", JOptionPane.INFORMATION_MESSAGE);
-                dispose();
+            JOptionPane.showMessageDialog(this,
+                    "------------------------- \n"
+                    + "Check-out successful!"
+                    + "\n-------------------------\n" + booking.toString());
+            dispose();
         }
     }
 

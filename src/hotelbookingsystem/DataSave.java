@@ -28,11 +28,11 @@ public class DataSave {
                 writer.write(bookingData);
                 writer.newLine();
             }
-        } catch (IOException e) 
+        } 
+        catch (IOException e) 
         {
             System.out.println("Error writing booking data to file.");
             e.printStackTrace();
         }
     }
 }
-

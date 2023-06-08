@@ -54,7 +54,6 @@ public class DataRead {
             System.out.println("Error reading booking data from file.");
             e.printStackTrace();
         } 
-        
         return bookings;
     }
 }

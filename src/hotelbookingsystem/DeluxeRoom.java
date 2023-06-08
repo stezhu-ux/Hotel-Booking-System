@@ -31,5 +31,5 @@ public class DeluxeRoom extends HotelRoom {
     public String toString() {
         return "Room " + getRoomNum() + "\n" + "Type " + getType() + "\n" + numBeds + " " + bedType + " bed(s)" + "\n" + "Price $" + getNightlyRate() + " per night" + "\n" + "Room is " + (isAvailable() ? "Available" : "Occupied");
   
-}
+    }
 }

@@ -1,7 +1,5 @@
 package hotelbookingsystem;
 
-import java.util.Scanner;
-import java.util.InputMismatchException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -31,7 +29,9 @@ public class RoomInfo {
         
         //add JTextArea
         JTextArea roomInfoArea = new JTextArea();
+        //dont allow edit
         roomInfoArea.setEditable(false);
+        //set font and size
         roomInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JScrollPane scrollPane = new JScrollPane(roomInfoArea);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
@@ -100,6 +100,10 @@ public class RoomInfo {
 
         //add JTextArea
         JTextArea roomInfoArea = new JTextArea();
+        //dont allow edit
+        roomInfoArea.setEditable(false);
+        //set font and size
+        roomInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JScrollPane scrollPane = new JScrollPane(roomInfoArea);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
          
@@ -159,7 +163,9 @@ public class RoomInfo {
 
     // Create JTextArea
     JTextArea guestInfoArea = new JTextArea();
+    //dont allow edit
     guestInfoArea.setEditable(false);
+    //set font and size
     guestInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
     JScrollPane scrollPane = new JScrollPane(guestInfoArea);
     mainPanel.add(scrollPane, BorderLayout.CENTER);
@@ -196,28 +202,30 @@ public class RoomInfo {
             HotelRoom room = booking.getRoom();
 
             // Append guest and room information
-            guestInfoArea.append(guest.toString() + "\n Occupied in room " + room.getRoomNum() + "\n");
+            guestInfoArea.append(guest.toString() + "\nOccupied in room " + room.getRoomNum() + "\n");
             guestInfoArea.append("-------------------------\n");
+            }
         }
     }
-}
-
-        public static void findGuestByName() {
-            
+    
+    //method to find guest by name
+    public static void findGuestByName() {
+         
+        //add JFrame
         JFrame frame = new JFrame("Find Guest By Name");
         frame.setSize(400, 300);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Create JPanel
+        //add JPanel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel();
-        // Create JLabel
+        //add JLabel
         JLabel nameLabel = new JLabel("Guest Name:");
         inputPanel.add(nameLabel);
 
-        // Create JTextField
+        //add JTextField
         JTextField nameField = new JTextField(10);
         //text field only accepts letters
         nameField.addKeyListener(new KeyAdapter() {
@@ -238,6 +246,10 @@ public class RoomInfo {
 
         // Create JTextArea
         JTextArea guestInfoArea = new JTextArea();
+        //dont allow edit
+        guestInfoArea.setEditable(false);
+        //set font and size
+        guestInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JScrollPane scrollPane = new JScrollPane(guestInfoArea);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -310,7 +322,9 @@ public class RoomInfo {
         
         //add JTextArea
         JTextArea roomInfoArea = new JTextArea();
+        //dont allow edit
         roomInfoArea.setEditable(false);
+        //set font and size
         roomInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JScrollPane scrollPane = new JScrollPane(roomInfoArea);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
@@ -374,7 +388,9 @@ public class RoomInfo {
 
         // Create JTextArea
         JTextArea roomInfoArea = new JTextArea();
+        //dont allow edit
         roomInfoArea.setEditable(false);
+        //set font and size
         roomInfoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         JScrollPane scrollPane = new JScrollPane(roomInfoArea);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
@@ -393,26 +409,22 @@ public class RoomInfo {
 
     //print and update list
    private static void refreshOccupiedRoomInfo(JTextArea roomInfoArea) {
-       StringBuilder roomInfoBuilder = new StringBuilder();
-       boolean occupied = false;
-       for (Booking booking : HotelBookingSystem.bookings) {
-           if (booking.getRoom().isOccupied()) {
-               roomInfoBuilder.append("Room ").append(booking.getRoom().getRoomNum()).append(" is occupied by").append("\n");
-               roomInfoBuilder.append("Guest name: ").append(booking.getGuest().getName()).append("\n");
-               roomInfoBuilder.append("Guest email: ").append(booking.getGuest().getEmail()).append("\n");
-               roomInfoBuilder.append("Guest phone: ").append(booking.getGuest().getPhone()).append("\n");
-               roomInfoBuilder.append("Check-in date: ").append(booking.getCheckInDate()).append("\n");
-               roomInfoBuilder.append("Check-out date: ").append(booking.getCheckOutDate()).append("\n");
-               roomInfoBuilder.append("Nightly stay booked for: ").append(booking.getNightlyStay()).append(" day(s)").append("\n");
-               roomInfoBuilder.append("Total amount due: $").append(booking.getTotalCost()).append("\n");
-               roomInfoBuilder.append("-------------------------").append("\n");
-               occupied = true;
-           }
-       }
-       if (!occupied) {
-           roomInfoBuilder.append("No rooms are currently occupied.").append("\n");
-           roomInfoBuilder.append("-------------------------").append("\n");
-       }
-       roomInfoArea.setText(roomInfoBuilder.toString());
-       }
+    StringBuilder roomInfoBuilder = new StringBuilder();
+    boolean occupied = false;
+    
+    for (Booking booking : HotelBookingSystem.bookings) {
+        if (booking.getRoom().isOccupied()) {
+            roomInfoBuilder.append(booking.toString()).append("\n");
+            roomInfoBuilder.append("-------------------------").append("\n");
+            occupied = true;
+        }
+    }
+    
+    if (!occupied) {
+        roomInfoBuilder.append("No rooms are currently occupied.").append("\n");
+        roomInfoBuilder.append("-------------------------").append("\n");
+    }
+    
+    roomInfoArea.setText(roomInfoBuilder.toString());
+    }
 }

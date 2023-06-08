@@ -13,13 +13,13 @@ import java.awt.event.KeyEvent;
 
 public class BookRoom extends JFrame implements ActionListener {
 
-    private JTextField nameField;
-    private JTextField emailField;
-    private JTextField phoneField;
-    private JTextField checkInField;
-    private JTextField checkOutField;
-    private JComboBox<String> roomComboBox;
-    private JButton bookButton;
+    private final JTextField nameField;
+    private final JTextField emailField;
+    private final JTextField phoneField;
+    private final JTextField checkInField;
+    private final JTextField checkOutField;
+    private final JComboBox<String> roomComboBox;
+    private final JButton bookButton;
 
     // Check if any room is unoccupied
     public static boolean checkAvailability() {
@@ -118,7 +118,7 @@ public class BookRoom extends JFrame implements ActionListener {
 
             //checks and prompt user to enter valid guest phone number
             if (!phone.matches("\\d{9,11}")) {
-                JOptionPane.showMessageDialog(this, "Please enter a valid phone number \n(NZ mobile numbers have 9-11 digits).");
+                JOptionPane.showMessageDialog(this, "Please enter a valid phone number \n(NZ mobile numbers have 9-11 digits).", "Error Message", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
@@ -131,17 +131,17 @@ public class BookRoom extends JFrame implements ActionListener {
                 checkInDate = LocalDate.parse(checkInString);
                 checkOutDate = LocalDate.parse(checkOutString);
             } catch (DateTimeParseException ex) {
-                JOptionPane.showMessageDialog(this, "Please enter valid check-in and check-out dates (YYYY-MM-DD).");
+                JOptionPane.showMessageDialog(this, "Please enter valid check-in and check-out dates (YYYY-MM-DD).", "Error Message", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
             if (checkInDate.isBefore(currentDate)) {
-                JOptionPane.showMessageDialog(this, "Check-in date must be after the current date.");
+                JOptionPane.showMessageDialog(this, "Check-in date must be after the current date.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
             if (checkOutDate.isBefore(checkInDate) || checkOutDate.isEqual(checkInDate)) {
-                JOptionPane.showMessageDialog(this, "Check-out date cannot be before or the same as check-in date.");
+                JOptionPane.showMessageDialog(this, "Check-out date cannot be before or the same as check-in date.", "Error Message", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
@@ -163,7 +163,10 @@ public class BookRoom extends JFrame implements ActionListener {
             DataSave.saveBookings(HotelBookingSystem.bookings);
 
             // Display booking details
-            JOptionPane.showMessageDialog(this, "------------------------- \nBooking successful!\n-------------------------\n" + booking.toString());
+            JOptionPane.showMessageDialog(this,
+                    "------------------------- \n"
+                    + "Booking successful!"
+                    + "\n-------------------------\n" + booking.toString());
             dispose();
         }
     }

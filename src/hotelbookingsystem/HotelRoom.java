@@ -54,10 +54,3 @@ public abstract class HotelRoom {
         return "Room " + roomNum + " type " + type + " price $" + nightlyRate;
     }
 }
-
-    
-
-
-    
-    
-

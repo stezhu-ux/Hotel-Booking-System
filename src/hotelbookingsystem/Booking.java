@@ -1,4 +1,5 @@
 package hotelbookingsystem;
+
 import java.time.LocalDate;
 
 public class Booking {
@@ -80,11 +81,11 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking Information:\n" +
+        return 
+                "Room Number: " + room.getRoomNum() + "\n" +
                 "Guest Name: " + guest.getName() + "\n" +
                 "Guest Email: " + guest.getEmail() + "\n" +
                 "Guest Phone: " + guest.getPhone() + "\n" +
-                "Room Number: " + room.getRoomNum() + "\n" +
                 "Check-in Date: " + checkInDate + "\n" +
                 "Check-out Date: " + checkOutDate + "\n" +
                 "Nightly Stay: " + nightlyStay + " day(s)" + "\n" +
