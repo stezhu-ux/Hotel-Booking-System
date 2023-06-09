@@ -15,7 +15,7 @@ public class CheckOut extends JFrame implements ActionListener {
     private final JButton updateButton;
 
      // Check if any room is occupied
-    public static boolean checkAvailability() {
+    public static boolean checkoutcheck() {
     for (HotelRoom room : HotelBookingSystem.rooms) {
         if (room.isOccupied()) {
             return true;
@@ -88,8 +88,8 @@ public class CheckOut extends JFrame implements ActionListener {
                 // remove the booking from the list of bookings
                 HotelBookingSystem.bookings.remove(booking);
 
-                // save the updated list of bookings to file
-                DataSave.saveBookings(HotelBookingSystem.bookings);
+                // save the updated list of bookings to file              
+                DataSave.removeBooking(booking);
 
                 // Display checkout details
             JOptionPane.showMessageDialog(this,

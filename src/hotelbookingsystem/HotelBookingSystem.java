@@ -28,7 +28,12 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(9, 1));
+        mainPanel.setLayout(new GridLayout(10, 2));
+        
+        JLabel titleLabel = new JLabel("Hotel Booking System");
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        mainPanel.add(titleLabel);  
         
         bookButton = new JButton("Book a Room");
         bookButton.addActionListener(this);
@@ -72,7 +77,7 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             
           if (e.getSource() == bookButton) {
-            if (BookRoom.checkAvailability()) 
+            if (BookRoom.bookroomcheck()) 
             {
                 SwingUtilities.invokeLater(() -> {
                     BookRoom bookRoom = new BookRoom();
@@ -87,7 +92,7 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
         }
         
         else if (e.getSource() == checkoutButton) {
-            if (CheckOut.checkAvailability()) {
+            if (CheckOut.checkoutcheck()) {
                 SwingUtilities.invokeLater(() -> {
                     CheckOut checkOut = new CheckOut();
                     checkOut.setVisible(true);
@@ -129,8 +134,7 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
         }
         
         else if (e.getSource() == exitButton) 
-        {
-            System.out.println("Exiting program...");
+        {   
             System.exit(0);
         }
     }
@@ -144,13 +148,10 @@ public class HotelBookingSystem extends JFrame implements ActionListener {
     rooms.add(new DeluxeRoom(4, 300, 2, BedType.QUEEN));
     rooms.add(new PenthouseRoom(5, 500, 3, BedType.KING, true));
     
-       // load previous bookings
-       File bookingsFile = new File("bookings.txt");
-   if (bookingsFile.exists()) {
-       bookings.addAll(DataRead.loadBookings());
-   } else {
-       System.out.println("No bookings file found.");
-   }
+      // load previous bookings
+        DataRead dataRead = new DataRead();
+        bookings.addAll(dataRead.loadBookings());
+       
         HotelBookingSystem GUI = new HotelBookingSystem();
         GUI.setVisible(true);
     }

@@ -26,7 +26,7 @@ public class BookRoom extends JFrame implements ActionListener {
     private final JButton updateButton;
 
     // Check if any room is unoccupied
-    public static boolean checkAvailability() {
+    public static boolean bookroomcheck() {
         for (HotelRoom room : HotelBookingSystem.rooms) {
             if (!room.isOccupied()) {
                 return true;
@@ -176,8 +176,14 @@ public class BookRoom extends JFrame implements ActionListener {
             // Create guest and booking objects
             Guest guest = new Guest(name, email, phone);
             Booking booking = new Booking(guest, room, checkInDate, checkOutDate);
+            
+             // set the room to occupied
             room.setOccupied(true);
+            
+            // remove the booking from the list of bookings
             HotelBookingSystem.bookings.add(booking);
+            
+            // save the updated list of bookings to file
             DataSave.saveBookings(HotelBookingSystem.bookings);     
             
             // Display booking details

@@ -1,47 +1,49 @@
 package hotelbookingsystem;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DataRead {
-    private static final String FILENAME = "bookings.txt";
-    private static final String DELIMITER = ";";
+    private static final String DB_URL = "jdbc:derby://localhost:1527/HotelBookingSystemDatabase;create=true";
+    private Connection connection;
 
-    public static List<Booking> loadBookings() {
+    public DataRead() {
+        try {
+            connection = DriverManager.getConnection(DB_URL);
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database.");
+            e.printStackTrace();
+        }
+    }
+
+    public List<Booking> loadBookings() {
         List<Booking> bookings = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILENAME))) {
-            String line;
-            while ((line = reader.readLine()) != null) 
-            {
-                // split the line into parts using the delimiter
-                String[] parts = line.split(DELIMITER);
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM bookings");
+             ResultSet resultSet = statement.executeQuery()) {
 
-                // parse the parts into the correct data types
-                String name = parts[0];
-                String email = parts[1];
-                String phone = parts[2];   
-                int roomNum = Integer.parseInt(parts[3]);
-                LocalDate checkInDate = LocalDate.parse(parts[4], DateTimeFormatter.ISO_LOCAL_DATE);
-                LocalDate checkOutDate = LocalDate.parse(parts[5], DateTimeFormatter.ISO_LOCAL_DATE);
-                double totalCost = Double.parseDouble(parts[6]);
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String phone = resultSet.getString("phone");
+                int roomNum = resultSet.getInt("room_num");
+                LocalDate checkInDate = LocalDate.parse(resultSet.getString("check_in_date"), DateTimeFormatter.ISO_LOCAL_DATE);
+                LocalDate checkOutDate = LocalDate.parse(resultSet.getString("check_out_date"), DateTimeFormatter.ISO_LOCAL_DATE);
+                double totalCost = resultSet.getDouble("total_cost");
 
-                // find the room with the given room number
+                // Find the room with the given room number
                 HotelRoom room = null;
-               for (HotelRoom availableRoom : HotelBookingSystem.rooms) {
+                for (HotelRoom availableRoom : HotelBookingSystem.rooms) {
                     if (availableRoom.getRoomNum() == roomNum) {
                         room = availableRoom;
-                        
                         break;
                     }
                 }
 
-                // create the booking object
+                // Create the booking object
                 if (room != null) {
                     Guest guest = new Guest(name, email, phone);
                     Booking booking = new Booking(guest, room, checkInDate, checkOutDate);
@@ -50,10 +52,11 @@ public class DataRead {
                     room.setOccupied(true);
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error reading booking data from file.");
+
+        } catch (SQLException e) {
+            System.out.println("Error reading booking data from database.");
             e.printStackTrace();
-        } 
+        }
         return bookings;
     }
 }
